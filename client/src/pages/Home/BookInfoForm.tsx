@@ -10,11 +10,12 @@ const BookInfoForm = ()=>{
 
     const refCreateBookInfoForm = useRef<HTMLFormElement>(null);
 
-    const onClickCreateBookInfo = () => {
+    const onClickCreateBookInfo = () : void => {
         if(refCreateBookInfoForm.current===null) return;
         if(!refCreateBookInfoForm.current.reportValidity()) return;
 
         let newBookInfo:BookInfoModel = {
+            id: Math.random(),
             title: inputBookTitle,
             author: inputBookAuthor
         }

@@ -2,6 +2,7 @@ import React, {useRef, useState, createContext} from "react";
 import DefaultNavBar from "../../components/DefaultNavBar";
 import BookInfoModel from "../../models/BookInfoModel";
 import BookInfoForm from "./BookInfoForm";
+import bookInfoModel from "../../models/BookInfoModel";
 
 export type BookInfoContextType = {
     bookInfos: BookInfoModel[],
@@ -12,6 +13,10 @@ export const BookInfoContext = createContext<BookInfoContextType | null>(null);
 
 const Home = () => {
     const [bookInfos, setBookInfos] = useState<BookInfoModel[]>([]);
+
+    const onClickDeleteBookInfo = (bookInfo:bookInfoModel):void=> {
+        setBookInfos(bookInfos.filter(bookInfoDatum => bookInfoDatum.id != bookInfo.id))
+    }
 
     return (
         <BookInfoContext.Provider value={{bookInfos, setBookInfos}}>
@@ -34,7 +39,12 @@ const Home = () => {
                                         <React.Fragment key={index}>
                                             <div className={'flex flex-col gap-2 bg-accent w-full sm:w-80 h-fit px-6 py-2'}>
                                                 <div className={'h-0 ml-auto -mr-4'}>
-                                                    <button className={'text-gray-400 -mt-3 align-text-top text-xl font-semibold hover:text-black'}>x</button>
+                                                    <button
+                                                        className={'text-gray-400 -mt-3 align-text-top text-xl font-semibold hover:text-black'}
+                                                        onClick={()=>onClickDeleteBookInfo(data)}
+                                                    >
+                                                        x
+                                                    </button>
                                                 </div>
                                                 <div className={'text-xl font-semibold'}>{data.title}</div>
                                                 <div className={'text-base font-semibold text-secondary'}>{data.author}</div>
