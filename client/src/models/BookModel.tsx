@@ -1,7 +1,7 @@
-interface BookInfoModel {
+interface BookModel {
     id: number,
     title: string,
     author: string
 }
 
-export default BookInfoModel;
+export default BookModel;

@@ -1,31 +1,31 @@
 import React, {useContext, useRef, useState} from "react";
-import BookInfoModel from "../../models/BookInfoModel";
-import {BookInfoContext, BookInfoContextType} from "./index";
+import BookModel from "../../models/BookModel";
+import {BookContext, BookContextType} from "./index";
 
-const BookInfoForm = ()=>{
-    const {bookInfos, setBookInfos} = useContext(BookInfoContext) as BookInfoContextType;
+const BookForm = ()=>{
+    const {books, setBooks} = useContext(BookContext) as BookContextType;
 
     const [inputBookTitle, setInputBookTitle] = useState('');
     const [inputBookAuthor, setInputBookAuthor] = useState('');
 
-    const refCreateBookInfoForm = useRef<HTMLFormElement>(null);
+    const refCreateBookForm = useRef<HTMLFormElement>(null);
 
-    const onClickCreateBookInfo = () : void => {
-        if(refCreateBookInfoForm.current===null) return;
-        if(!refCreateBookInfoForm.current.reportValidity()) return;
+    const onClickCreateBook = () : void => {
+        if(refCreateBookForm.current===null) return;
+        if(!refCreateBookForm.current.reportValidity()) return;
 
-        let newBookInfo:BookInfoModel = {
+        let newBook:BookModel = {
             id: Math.random(),
             title: inputBookTitle,
             author: inputBookAuthor
         }
 
-        setBookInfos([newBookInfo, ...bookInfos]);
+        setBooks([newBook, ...books]);
     };
 
     return (
         <>
-            <form ref={refCreateBookInfoForm} className={'flex  flex-col gap-2 w-full sm:w-80 mx-auto p-2'}>
+            <form ref={refCreateBookForm} className={'flex  flex-col gap-2 w-full sm:w-80 mx-auto p-2'}>
                 <input
                     name={'book_title'}
                     placeholder={'Book Title'}
@@ -44,11 +44,11 @@ const BookInfoForm = ()=>{
                 />
 
                 <div className={'text-white w-fit px-8 py-1 bg-secondary rounded-full cursor-pointer select-none'}
-                     onClick={onClickCreateBookInfo}>Create
+                     onClick={onClickCreateBook}>Create
                 </div>
             </form>
         </>
     );
 }
 
-export default BookInfoForm;
+export default BookForm;

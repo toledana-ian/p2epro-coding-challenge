@@ -1,32 +1,31 @@
-import React, {useRef, useState, createContext} from "react";
+import React, {useState, createContext} from "react";
 import DefaultNavBar from "../../components/DefaultNavBar";
-import BookInfoModel from "../../models/BookInfoModel";
-import BookInfoForm from "./BookInfoForm";
-import bookInfoModel from "../../models/BookInfoModel";
+import BookModel from "../../models/BookModel";
+import BookForm from "./BookForm";
 
-export type BookInfoContextType = {
-    bookInfos: BookInfoModel[],
-    setBookInfos: (value:BookInfoModel[]) => void
+export type BookContextType = {
+    books: BookModel[],
+    setBooks: (value:BookModel[]) => void
 }
 
-export const BookInfoContext = createContext<BookInfoContextType | null>(null);
+export const BookContext = createContext<BookContextType | null>(null);
 
 const Home = () => {
-    const [bookInfos, setBookInfos] = useState<BookInfoModel[]>([]);
+    const [books, setBooks] = useState<BookModel[]>([]);
 
-    const onClickDeleteBookInfo = (bookInfo:bookInfoModel):void=> {
-        setBookInfos(bookInfos.filter(bookInfoDatum => bookInfoDatum.id != bookInfo.id))
+    const onClickDeleteBook = (book:BookModel):void=> {
+        setBooks(books.filter(bookDatum => bookDatum.id !== book.id))
     }
 
     return (
-        <BookInfoContext.Provider value={{bookInfos, setBookInfos}}>
+        <BookContext.Provider value={{books: books, setBooks: setBooks}}>
             <div className={'flex flex-col bg-gray-100 min-h-screen'}>
                 <DefaultNavBar/>
                 <div className={'flex flex-col sm:flex-row-reverse grow bg-white container mx-auto p-4 pt-6 gap-2'}>
                     <div className={'flex flex-wrap grow p-2 border border-2 border-dashed'}>
                         {
                             /* Show empty text if book no book info */
-                            bookInfos.length == 0 &&
+                            books.length === 0 &&
                             <>
                                 <div className={'text-xl text-center mt-10'}>Empty List</div>
                             </>
@@ -34,14 +33,14 @@ const Home = () => {
                         <div className={'flex flex-wrap h-fit gap-4 justify-center w-full'}>
                             {
                                 /* Loop to display each book info */
-                                bookInfos.map((data, index) => {
+                                books.map((data, index) => {
                                     return (
                                         <React.Fragment key={index}>
                                             <div className={'flex flex-col gap-2 bg-accent w-full sm:w-80 h-fit px-6 py-2'}>
                                                 <div className={'h-0 ml-auto -mr-4'}>
                                                     <button
                                                         className={'text-gray-400 -mt-3 align-text-top text-xl font-semibold hover:text-black'}
-                                                        onClick={()=>onClickDeleteBookInfo(data)}
+                                                        onClick={()=>onClickDeleteBook(data)}
                                                     >
                                                         x
                                                     </button>
@@ -55,10 +54,10 @@ const Home = () => {
                             }
                         </div>
                     </div>
-                    <BookInfoForm/>
+                    <BookForm/>
                 </div>
             </div>
-        </BookInfoContext.Provider>
+        </BookContext.Provider>
     );
 }
 
