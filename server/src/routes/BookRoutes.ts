@@ -5,6 +5,6 @@ const router = Router();
 
 router.get('/books', getBooks);
 router.post('/books', addBook);
-router.delete('/books', deleteBook);
+router.delete('/books/:id', deleteBook);
 
 export default router;

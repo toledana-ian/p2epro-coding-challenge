@@ -1,6 +1,8 @@
 import React, {useContext, useRef, useState} from "react";
 import BookModel from "../../models/BookModel";
 import {BookContext, BookContextType} from "./index";
+import axios from "axios";
+import {promises} from "dns";
 
 const BookForm = ()=>{
     const {books, setBooks} = useContext(BookContext) as BookContextType;
@@ -10,17 +12,21 @@ const BookForm = ()=>{
 
     const refCreateBookForm = useRef<HTMLFormElement>(null);
 
-    const onClickCreateBook = () : void => {
-        if(refCreateBookForm.current===null) return;
-        if(!refCreateBookForm.current.reportValidity()) return;
+    const onClickCreateBook = ():void => {
+        if (refCreateBookForm.current === null) return;
+        if (!refCreateBookForm.current.reportValidity()) return;
 
-        let newBook:BookModel = {
-            id: Math.random(),
+        let newBook: BookModel = {
+            id: 0,
             title: inputBookTitle,
             author: inputBookAuthor
         }
 
-        setBooks([newBook, ...books]);
+        axios.post('/api/books', newBook)
+            .then((response)=>{
+                setBooks([response.data, ...books]);
+            })
+        ;
     };
 
     return (

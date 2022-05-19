@@ -1,7 +1,8 @@
-import React, {useState, createContext} from "react";
+import React, {useState, createContext, useEffect} from "react";
 import DefaultNavBar from "../../components/DefaultNavBar";
 import BookModel from "../../models/BookModel";
 import BookForm from "./BookForm";
+import axios from "axios";
 
 export type BookContextType = {
     books: BookModel[],
@@ -13,9 +14,25 @@ export const BookContext = createContext<BookContextType | null>(null);
 const Home = () => {
     const [books, setBooks] = useState<BookModel[]>([]);
 
+    const refreshBooks = () => {
+        axios.get('/api/books')
+            .then((response)=>{
+                setBooks(response.data.reverse());
+            })
+        ;
+    };
+
     const onClickDeleteBook = (book:BookModel):void=> {
-        setBooks(books.filter(bookDatum => bookDatum.id !== book.id))
+        axios.delete('/api/books/'+book.id)
+            .then(()=>{
+                refreshBooks();
+            })
+        ;
     }
+
+    useEffect(()=>{
+        refreshBooks();
+    }, [])
 
     return (
         <BookContext.Provider value={{books: books, setBooks: setBooks}}>
