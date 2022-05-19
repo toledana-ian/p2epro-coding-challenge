@@ -1,5 +1,5 @@
 type BookModel = {
-    id: number,
+    id: string,
     title: string,
     author: string
 };
