@@ -1,28 +1,42 @@
-import lowdb from 'lowdb';
+import lowdb from "lowdb";
 import fs from "fs";
 import {join} from 'path';
+import BookModel from "./models/BookModel";
 
-const getFileLoc = ()=>{
-    const file = join(__dirname,'..','db.json');
+type BooksModel = {
+    books: BookModel[];
+}
 
-    fs.open(file, 'r', (err, fd) => {
-        if (err) {
-            if (err.code === 'ENOENT') {
-                fs.appendFile(file, '', function (err) {
-                    if (err) throw err;
-                    console.log('Created db.json!');
-                });
-                return;
+let db: lowdb.Low<BooksModel>;
+
+export const createConnection = async () => {
+    const getFileLoc = () => {
+        const file = join(__dirname, '..', 'db.json');
+
+        fs.open(file, 'r', (err, fd) => {
+            if (err) {
+                if (err.code === 'ENOENT') {
+                    fs.appendFile(file, '', function (err) {
+                        if (err) throw err;
+                        console.log('Created db.json!');
+                    });
+                    return;
+                }
+                throw err;
             }
-            throw err;
-        }
-        fs.close(fd);
-    });
+            fs.close(fd);
+        });
 
-    return file;
+        return file;
+    }
+
+    const adapter = new lowdb.JSONFile<BooksModel>(getFileLoc());
+    db = new lowdb.Low<BooksModel>(adapter);
+    await db.read();
+
+    db.data ||= {
+        books: []
+    };
 }
 
-export const createConnection = () => {
-    const adapater = new lowdb.JSONFileSync(getFileLoc());
-    lowdb(adapater);
-}
+export const getConnection = () => db;

@@ -1,5 +1,7 @@
 import {Handler, Request, Response} from 'express';
+import {createConnection, getConnection} from '../db'
 
 export const getBooks:Handler = (req:Request, res:Response)=>{
-    res.send('Hello from router');
+    createConnection();
+    res.send(getConnection().data?.books);
 }
