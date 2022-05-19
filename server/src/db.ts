@@ -1,4 +1,5 @@
 import lowdb from "lowdb";
+import FileSync from "lowdb/adapters/FileSync";
 import fs from "fs";
 import {join} from 'path';
 import BookModel from "./models/BookModel";
@@ -7,9 +8,9 @@ type BooksModel = {
     books: BookModel[];
 }
 
-let db: lowdb.Low<BooksModel>;
+let db: lowdb.LowdbSync<BooksModel>;
 
-export const createConnection = async () => {
+export const createConnection = () => {
     const getFileLoc = () => {
         const file = join(__dirname, '..', 'db.json');
 
@@ -30,13 +31,9 @@ export const createConnection = async () => {
         return file;
     }
 
-    const adapter = new lowdb.JSONFile<BooksModel>(getFileLoc());
-    db = new lowdb.Low<BooksModel>(adapter);
-    await db.read();
-
-    db.data ||= {
-        books: []
-    };
+    const adapter = new FileSync<BooksModel>(getFileLoc());
+    db = lowdb(adapter);
+    db.defaults({ books: [] }).write();
 }
 
 export const getConnection = () => db;
